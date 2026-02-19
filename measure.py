@@ -34,10 +34,10 @@ print(f"Calcaneus Transformations: {calc_transform.shape}")
 def apply_transformation(vertices, matrix):
     transform_matrix = np.array(matrix).reshape(4,4)
     one = np.ones((vertices.shape[0], 1))
-    homogenous_verticies = np.hstack((vertices, one))
-    real_vertices = homogenous_verticies @ transform_matrix
+    homogenous_vertices = np.hstack((vertices, one))
+    real_vertices = homogenous_vertices @ transform_matrix
 
-    return real_vertices[:, :3]
+    return real_vertices[:, :3]/real_vertices[:, 3:4]
 
 distances = []
 frame_count = astr_transform.shape[0]
@@ -62,6 +62,9 @@ for frame in range(frame_count):
     distances.append({'frame': frame + 1, 'min_distance': min_distance, 'center_distance': center_distance})
 
 distances_dataframe = pd.DataFrame(distances)
+scaling_factor = 3.5 / 52.0
+distances_dataframe['min_distance'] = distances_dataframe['min_distance'] * scaling_factor
+distances_dataframe['center_distance'] = distances_dataframe['center_distance'] * scaling_factor
 print(distances_dataframe)
 
 plt.figure(figsize=(10, 6))
