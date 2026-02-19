@@ -5,6 +5,7 @@
 import numpy as np
 import pandas as pd
 from scipy.spatial.distance import cdist
+import matplotlib.pyplot as plt
 
 # method to load vertices
 def load_vertices(file_path):
@@ -38,7 +39,7 @@ def apply_transformation(vertices, matrix):
 
     return real_vertices[:, :3]
 
-results = []
+distances = []
 frame_count = astr_transform.shape[0]
 
 print("Processing " + str(frame_count) + " frames...")
@@ -58,5 +59,16 @@ for frame in range(frame_count):
     calc_center = np.mean(calc_real_vertices, axis=0)
     center_distance = np.linalg.norm(astr_center - calc_center)
 
-    results.append({'frame': frame + 1, 'min_stance': min_distance, 'center_distance': center_distance})
+    distances.append({'frame': frame + 1, 'min_distance': min_distance, 'center_distance': center_distance})
 
+distances_dataframe = pd.DataFrame(distances)
+print(distances_dataframe)
+
+plt.figure(figsize=(10, 6))
+plt.plot(distances_dataframe['frame'], distances_dataframe['min_distance'], label='Min Surface Distance', color='blue', linewidth=2)
+plt.plot(distances_dataframe['frame'], distances_dataframe['center_distance'], label='Center Distance', color='red', linewidth=2)
+plt.title('Subtalar Joint Space Over Time', fontsize=14)
+plt.xlabel('Frame', fontsize=12)
+plt.ylabel('Distance (mm)', fontsize=12)
+plt.legend()
+plt.show()
