@@ -1,0 +1,8 @@
+# Generated outputs
+data/*.npy
+data/*.mp4
+data/*.html
+
+# Results
+*.mp4
+*.png
